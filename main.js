@@ -439,6 +439,7 @@ probe.src = CONFIG.scenes[0].src;
 setTimeout(hideLoading, 3000);
 
 // ── INIT ──────────────────────────────────────────────────────────────
-// Hiển thị info panel ngay từ scene đầu
+targetScroll  = 0;
+currentScroll = 0;
 updateInfoPanel(CONFIG.scenes[0]);
 scheduleRender();
