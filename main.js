@@ -439,8 +439,9 @@ probe.src = CONFIG.scenes[0].src;
 setTimeout(hideLoading, 3000);
 
 // ── INIT ──────────────────────────────────────────────────────────────
-// Start past fade-in zone so scene-01 is fully visible immediately
-targetScroll  = CONFIG.CROSSFADE;
-currentScroll = CONFIG.CROSSFADE;
+// Start at scene-05 (index 8)
+const _initScene = CONFIG.scenes[8];
+targetScroll  = _initScene.start + CONFIG.CROSSFADE;
+currentScroll = _initScene.start + CONFIG.CROSSFADE;
 updateInfoPanel(CONFIG.scenes[0]);
 scheduleRender();
