@@ -133,6 +133,21 @@ html, body {
 }
 #nav-contact a:hover { color: rgba(255,255,255,0.8); }
 
+#nav-ai-btn {
+  display: inline-block;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: #fff;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: opacity 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+#nav-ai-btn:hover { opacity: 0.85; transform: scale(1.04); }
+
 /* ── Left info panel ── */
 #info-panel {
   position: fixed;
