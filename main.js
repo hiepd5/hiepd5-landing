@@ -105,7 +105,9 @@ const CONFIG = {
       src:      ASSET_BASE + 'images/scene-05.jpg',
       zoom:     { from: 1.15, to: 1.0 },
       pan:      { fromX: 3, fromY: 0, toX: -3, toY: 0 },
-      fog:      false,
+      fog:      true,
+      vignette: true,
+      grain:    true,
       title:    'TERRACE',
       subtitle: 'HÀNH LANG TẦNG CAO',
       code:     'SC-05',
@@ -206,6 +208,18 @@ CONFIG.scenes.forEach((scene) => {
         fogWrap.appendChild(fog);
       }
       wrap.appendChild(fogWrap);
+    }
+
+    if (scene.vignette) {
+      const vig = document.createElement('div');
+      vig.className = 'vignette-strong';
+      wrap.appendChild(vig);
+    }
+
+    if (scene.grain) {
+      const grain = document.createElement('div');
+      grain.className = 'film-grain';
+      wrap.appendChild(grain);
     }
 
     if (scene.showSocial) wrap.appendChild(buildSocialLinks());
