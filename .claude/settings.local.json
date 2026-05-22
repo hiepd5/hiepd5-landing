@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ffmpeg -i assets/transitions/t-01-02.mp4 -g 1 -crf 20 -preset fast assets/transitions/t-01-02-kf.mp4 -y)"
+    ]
+  }
+}
