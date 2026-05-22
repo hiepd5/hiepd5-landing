@@ -155,46 +155,60 @@ html, body {
   top: 50%;
   transform: translateY(-50%);
   z-index: 100;
-  max-width: 320px;
+  max-width: 420px;
   perspective: 1000px;
   transform-style: preserve-3d;
 }
 
+/* Ambient Radial Dark Backdrop behind text */
+#info-panel::before {
+  content: '';
+  position: absolute;
+  inset: -60px -40px -60px -80px;
+  background: radial-gradient(circle at left center, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.3) 40%, transparent 75%);
+  filter: blur(25px);
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
 #project-label {
-  font-size: 0.58rem;
-  letter-spacing: 0.3em;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255, 255, 255, 0.5);
   margin-bottom: 16px;
 }
 
 #scene-title {
-  font-size: clamp(1.8rem, 3.2vw, 3rem);
-  font-weight: 300;
-  letter-spacing: 0.06em;
+  font-size: clamp(2.1rem, 3.8vw, 3.6rem);
+  font-weight: 400;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #fff;
-  line-height: 1.1;
-  margin-bottom: 8px;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
   transition: opacity 0.5s ease, transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform, opacity;
 }
 
 #scene-subtitle {
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
+  font-size: 0.82rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.45);
-  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 24px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
   transition: opacity 0.5s ease, transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform, opacity;
 }
 
 #scene-divider {
-  width: 32px;
+  width: 48px;
   height: 1px;
-  background: rgba(255,255,255,0.3);
-  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  margin-bottom: 24px;
   transition: opacity 0.5s ease, transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform, opacity;
 }
@@ -203,18 +217,19 @@ html, body {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   transition: opacity 0.5s ease, transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform, opacity;
 }
 
 #scene-specs li {
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.38);
-  padding-left: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  padding-left: 14px;
   position: relative;
+  line-height: 1.45;
 }
 #scene-specs li::before {
   content: '—';
@@ -486,14 +501,14 @@ html, body {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 4px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   backdrop-filter: blur(10px);
@@ -577,9 +592,13 @@ html, body {
 /* ── Mobile ── */
 @media (max-width: 768px) {
   #top-nav    { padding: 0 20px; }
-  #info-panel { left: 20px; max-width: 260px; }
+  #info-panel { left: 20px; max-width: 320px; }
+  #info-panel::before {
+    inset: -40px -20px -40px -40px;
+    background: radial-gradient(circle at left center, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 80%);
+  }
   #right-panel{ right: 20px; }
   #bottom-bar { padding: 0 20px; }
   #nav-links  { display: none; }
-  #scene-title { font-size: 1.6rem; }
+  #scene-title { font-size: 1.8rem; }
 }
