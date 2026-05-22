@@ -38,12 +38,18 @@ const CONFIG = {
       zoom:     { from: 1.0, to: 1.12 },
       pan:      { fromX: 2, fromY: -1, toX: -2, toY: 1 },
       fog:      true,
-      title:    'CAMPUS',
-      subtitle: 'TOÀN CẢNH',
+      title:    'HD5 STUDIO',
+      subtitle: 'DIỄN HỌA KIẾN TRÚC ĐẲNG CẤP',
       code:     'SC-01',
-      codeLabel:'TỔNG THỂ',
-      specs:    ['Loại công trình: Trường học', 'Diện tích: —', 'Địa điểm: —', 'Chủ đầu tư: —'],
-      cta:      'Xem chi tiết',
+      codeLabel:'HD5STUDIO.COM',
+      specs:    [
+        'Dịch vụ: Diễn họa quy hoạch & kiến trúc chất lượng cao',
+        'Giải pháp: Hình ảnh render & Phim Cinematic 3D',
+        'Liên hệ nhận dự án (Zalo): Sđt 0979 591 156',
+        'Email công việc: kts.vuongdachiep@gmail.com'
+      ],
+      cta:      'Liên hệ làm việc',
+      ctaUrl:   'https://hd5studio.com',
       showSocial: true,
     },
 
@@ -55,13 +61,22 @@ const CONFIG = {
       zoom:     { from: 1.0, to: 1.15 },
       pan:      { fromX: -3, fromY: 0, toX: 3, toY: -1 },
       fog:      false,
-      title:    'SÂN VẬN ĐỘNG',
-      subtitle: 'KHÔNG GIAN VẬN ĐỘNG',
+      title:    'D5 RENDER WORKFLOW',
+      subtitle: 'ĐÀO TẠO & CHIA SẺ KIẾN THỨC MIỄN PHÍ',
       code:     'SC-02',
-      codeLabel:'NGOẠI THẤT',
-      specs:    ['Khu vực: Sân track điền kinh', 'Vật liệu: Tartan xanh', 'Sức chứa: —'],
+      codeLabel:'LEARNING WORKFLOW',
+      specs:    [
+        'Nền tảng học: Kênh YouTube HiepD5',
+        'Chủ đề: Hướng dẫn D5 Render từ cơ bản đến nâng cao',
+        'Giải pháp AI: Ứng dụng Stable Diffusion trong kiến trúc',
+        'Workflow: Tối ưu hóa thời gian render thực chiến'
+      ],
       cta:      '',
       showSocial: false,
+      actionLinks: [
+        { text: 'Học D5 Render Cơ Bản', url: 'https://youtube.com/playlist?list=PLAxnVKb5XqwUD_rpWIupGl20BT2cTIKBX&si=gPHvgS0U5zgHcBxk' },
+        { text: 'Ứng Dụng AI Kiến Trúc', url: 'https://youtube.com/playlist?list=PLAxnVKb5XqwVaD79Kf3S6Tuguc2aM2A_M&si=eqrdbWTPWmsPCh8Q' }
+      ]
     },
 
     { type: 'frames', dir: ASSET_BASE + 'frames/t-02-03/', count: 122 },
@@ -72,13 +87,20 @@ const CONFIG = {
       zoom:     { from: 1.05, to: 1.18 },
       pan:      { fromX: 3, fromY: 1, toX: -3, toY: -1 },
       fog:      false,
-      title:    'ARCADE VÒM',
-      subtitle: 'NỘI THẤT TẦNG TRỆT',
+      title:    'D5 RENDER TIPS',
+      subtitle: 'KINH NGHIỆM THỰC CHIẾN CHUYÊN SÂU',
       code:     'SC-03',
-      codeLabel:'NỘI THẤT',
-      specs:    ['Khu vực: Arcade — hành lang vòm', 'Vật liệu: Terracotta + bê tông', 'Chiều cao: —'],
+      codeLabel:'ADVANCED TECHNIQUES',
+      specs:    [
+        'Nội dung: Các thủ thuật xử lý ánh sáng & vật liệu khó',
+        'Quy trình: Đồng bộ hóa 3d SketchUp sang D5 Render',
+        'Mục tiêu: Nâng cao chất lượng ảnh diễn họa tiệm cận thực tế'
+      ],
       cta:      '',
       showSocial: false,
+      actionLinks: [
+        { text: 'Xem Tips D5 Render Chuyên Sâu', url: 'https://youtube.com/playlist?list=PLAxnVKb5XqwVdEsJm4-eKY2picTnVQn0E&si=kS-T3AkDR0dfiIp4' }
+      ]
     },
 
     { type: 'frames', dir: ASSET_BASE + 'frames/t-03-04/', count: 122 },
@@ -89,12 +111,17 @@ const CONFIG = {
       zoom:     { from: 1.05, to: 1.18 },
       pan:      { fromX: -2, fromY: -1, toX: 2, toY: 1 },
       fog:      false,
-      title:    'ATRIUM',
-      subtitle: 'NỘI THẤT ĐA TẦNG',
+      title:    'FUTURE VISUAL',
+      subtitle: 'ĐỊNH HƯỚNG CÔNG NGHỆ TƯƠNG LAI',
       code:     'SC-04',
-      codeLabel:'NỘI THẤT',
-      specs:    ['Khu vực: Atrium trung tâm', 'Số tầng: —', 'Đặc điểm: Cây xanh nội thất'],
-      cta:      '',
+      codeLabel:'VISION',
+      specs:    [
+        'Công nghệ: Real-time Raytracing & Neural Rendering',
+        'Xu hướng: Đón đầu kỷ nguyên thiết kế tối ưu bằng AI',
+        'Sứ mệnh: Nâng tầm cộng đồng kiến trúc sư Việt Nam'
+      ],
+      cta:      'Tham gia cộng đồng',
+      ctaUrl:   'https://www.facebook.com/groups/9524388777642550',
       showSocial: false,
     },
 
@@ -108,12 +135,17 @@ const CONFIG = {
       fog:      true,
       vignette: true,
       grain:    true,
-      title:    'TERRACE',
-      subtitle: 'HÀNH LANG TẦNG CAO',
+      title:    'VƯƠNG ĐẮC HIỆP',
+      subtitle: 'HIEPD5 / ARCHITECTURAL VISUALIZER',
       code:     'SC-05',
-      codeLabel:'NGOẠI THẤT',
-      specs:    ['Khu vực: Walkway tầng trên', 'Tầm nhìn: Toàn khu campus', 'Vật liệu: Bê tông + lan can'],
-      cta:      '',
+      codeLabel:'ABOUT ME',
+      specs:    [
+        'Sáng lập: <a href="https://www.facebook.com/groups/9524388777642550" target="_blank" rel="noopener">Group D5render Viet nam | Quy hoach kiến trúc</a>',
+        'Chuyên môn: Diễn họa kiến trúc & Quy hoạch',
+        'Tiên phong: Ứng dụng AI trong quy trình thiết kế',
+        'Định hướng: Tối ưu hóa workflow kiến trúc thực chiến'
+      ],
+      cta:      'Tìm hiểu thêm',
       showSocial: false,
     },
 
@@ -297,7 +329,12 @@ function updateInfoPanel(scene) {
 
   sceneTitle.textContent  = scene.title    || '';
   sceneSub.textContent    = scene.subtitle || '';
-  sceneCta.textContent    = scene.cta      || '';
+  
+  if (scene.cta && scene.ctaUrl) {
+    sceneCta.innerHTML = `<a href="${scene.ctaUrl}" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; cursor:none;">${scene.cta}</a>`;
+  } else {
+    sceneCta.textContent = scene.cta || '';
+  }
 
   sceneSpecs.innerHTML = (scene.specs || [])
     .map(s => `<li>${s}</li>`).join('');
@@ -305,6 +342,29 @@ function updateInfoPanel(scene) {
   sceneCode.innerHTML = scene.code
     ? `${scene.code}<span>${scene.codeLabel || ''}</span>`
     : '';
+
+  // Dynamic action buttons (YouTube playlists)
+  const sceneActionsEl = document.getElementById('scene-actions');
+  if (sceneActionsEl) {
+    sceneActionsEl.innerHTML = '';
+    if (scene.actionLinks && scene.actionLinks.length > 0) {
+      scene.actionLinks.forEach(link => {
+        const a = document.createElement('a');
+        a.className = 'action-btn';
+        a.href = link.url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = link.text;
+        sceneActionsEl.appendChild(a);
+      });
+      sceneActionsEl.style.display = 'flex';
+      void sceneActionsEl.offsetWidth; // Force repaint
+      sceneActionsEl.style.opacity = '1';
+    } else {
+      sceneActionsEl.style.display = 'none';
+      sceneActionsEl.style.opacity = '0';
+    }
+  }
 
   // Update active nav link
   const sceneIdx = CONFIG.scenes.indexOf(scene);
@@ -389,10 +449,31 @@ function render() {
     if (opacity > dominantProgress) {
       dominantProgress = opacity;
       dominantScene    = scene;
+      dominantScene.currentProgress = progress; // Track scene active progress
     }
   });
 
-  if (dominantScene) updateInfoPanel(dominantScene);
+  if (dominantScene) {
+    updateInfoPanel(dominantScene);
+
+    // Apply 3D Parallax & Depth Translation to info panel children
+    const progress = dominantScene.currentProgress || 0.5;
+    const delta = progress - 0.5; // range: -0.5 to 0.5
+
+    sceneTitle.style.transform   = `translate3d(${(delta * -40).toFixed(1)}px, 0, ${(Math.abs(delta) * -80).toFixed(1)}px) rotateY(${(delta * -10).toFixed(1)}deg)`;
+    sceneSub.style.transform     = `translate3d(${(delta * -60).toFixed(1)}px, 0, ${(Math.abs(delta) * -50).toFixed(1)}px) rotateY(${(delta * -12).toFixed(1)}deg)`;
+    sceneSpecs.style.transform   = `translate3d(${(delta * -80).toFixed(1)}px, 0, ${(Math.abs(delta) * -20).toFixed(1)}px) rotateY(${(delta * -15).toFixed(1)}deg)`;
+
+    const divider = document.getElementById('scene-divider');
+    if (divider) {
+      divider.style.transform   = `translate3d(${(delta * -50).toFixed(1)}px, 0, ${(Math.abs(delta) * -60).toFixed(1)}px) rotateY(${(delta * -11).toFixed(1)}deg)`;
+    }
+
+    const actions = document.getElementById('scene-actions');
+    if (actions) {
+      actions.style.transform   = `translate3d(${(delta * -95).toFixed(1)}px, 0, 0px) rotateY(${(delta * -18).toFixed(1)}deg)`;
+    }
+  }
 
   if (Math.abs(targetScroll - currentScroll) > CONFIG.LERP_SETTLE) {
     scheduleRender();
@@ -451,6 +532,70 @@ const probe = new Image();
 probe.onload = probe.onerror = hideLoading;
 probe.src = CONFIG.scenes[0].src;
 setTimeout(hideLoading, 3000);
+
+// ── AMBIENT AUDIO ENGINE ──────────────────────────────────────────────
+const bgAudio      = document.getElementById('bg-audio');
+const audioToggle  = document.getElementById('audio-toggle');
+let audioStarted = false;
+
+function startAudio() {
+  if (audioStarted) return;
+  audioStarted = true;
+
+  bgAudio.play().then(() => {
+    audioToggle.classList.remove('audio-muted');
+  }).catch(err => {
+    console.log("Autoplay prevented, waiting for user interaction.", err);
+    audioStarted = false; // Allow retry
+  });
+
+  // Clean up listeners
+  window.removeEventListener('click', startAudio);
+  window.removeEventListener('scroll', startAudio);
+  window.removeEventListener('wheel', startAudio);
+  window.removeEventListener('touchstart', startAudio);
+}
+
+// User interaction events to trigger audio
+window.addEventListener('click', startAudio, { passive: true });
+window.addEventListener('scroll', startAudio, { passive: true });
+window.addEventListener('wheel', startAudio, { passive: true });
+window.addEventListener('touchstart', startAudio, { passive: true });
+
+function fadeAudio(volume, duration = 800) {
+  const startVol = bgAudio.volume;
+  const steps = 20;
+  const interval = duration / steps;
+  let step = 0;
+
+  const timer = setInterval(() => {
+    step++;
+    bgAudio.volume = startVol + (volume - startVol) * (step / steps);
+    if (step >= steps) {
+      bgAudio.volume = volume;
+      clearInterval(timer);
+    }
+  }, interval);
+}
+
+if (audioToggle && bgAudio) {
+  bgAudio.volume = 0.5; // Init volume at 50%
+
+  audioToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (bgAudio.paused) {
+      bgAudio.play();
+      audioToggle.classList.remove('audio-muted');
+      fadeAudio(0.5);
+    } else {
+      fadeAudio(0, 400);
+      setTimeout(() => {
+        bgAudio.pause();
+        audioToggle.classList.add('audio-muted');
+      }, 400);
+    }
+  });
+}
 
 // ── INIT ──────────────────────────────────────────────────────────────
 // Start at scene-05 (index 8)

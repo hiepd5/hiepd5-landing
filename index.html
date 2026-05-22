@@ -28,7 +28,14 @@
     <div id="scene-subtitle"></div>
     <div id="scene-divider"></div>
     <ul id="scene-specs"></ul>
+    <!-- Dynamic action buttons (like Youtube playlists) -->
+    <div id="scene-actions"></div>
   </div>
+
+  <!-- Ambient Audio -->
+  <audio id="bg-audio" loop>
+    <source src="https://pub-51ede49b8dd446e48127b94ee7d22d71.r2.dev/audio/tour360-ambient.mp3" type="audio/mpeg">
+  </audio>
 
   <!-- Top navigation -->
   <nav id="top-nav">
@@ -37,6 +44,15 @@
     <div id="nav-contact">
       <a href="tel:0979591156">0979 591 156</a>
     </div>
+    
+    <!-- Soundwave Audio Toggle -->
+    <button id="audio-toggle" class="audio-muted" title="Bật/Tắt Nhạc Nền">
+      <span class="bar bar-1"></span>
+      <span class="bar bar-2"></span>
+      <span class="bar bar-3"></span>
+      <span class="bar bar-4"></span>
+    </button>
+
     <a id="nav-ai-btn" href="https://aistudio.google.com/u/1/apps/acd43aee-4604-4684-a130-194bea8817fa?showPreview=true&amp;showAssistant=true&amp;fullscreenApplet=true" target="_blank" rel="noopener">AI PROMPT 2.0</a>
   </nav>
 
