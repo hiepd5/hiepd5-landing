@@ -40,7 +40,7 @@ const CONFIG = {
       fog:      true,
       title:    'HD5 STUDIO',
       subtitle: 'DIỄN HỌA KIẾN TRÚC ĐẲNG CẤP',
-      code:     'SC-01',
+      code:     'STUDIO',
       codeLabel:'HD5STUDIO.COM',
       specs:    [
         'Dịch vụ: Diễn họa quy hoạch & kiến trúc chất lượng cao',
@@ -51,6 +51,9 @@ const CONFIG = {
       cta:      'Liên hệ làm việc',
       ctaUrl:   'https://hd5studio.com',
       showSocial: true,
+      actionLinks: [
+        { text: 'Truy cập HD5Studio.com', url: 'https://hd5studio.com' }
+      ]
     },
 
     { type: 'frames', dir: ASSET_BASE + 'frames/t-01-02/', count: 152 },
@@ -63,7 +66,7 @@ const CONFIG = {
       fog:      false,
       title:    'D5 RENDER WORKFLOW',
       subtitle: 'ĐÀO TẠO & CHIA SẺ KIẾN THỨC MIỄN PHÍ',
-      code:     'SC-02',
+      code:     'WORKFLOW',
       codeLabel:'LEARNING WORKFLOW',
       specs:    [
         'Nền tảng học: Kênh YouTube HiepD5',
@@ -75,7 +78,7 @@ const CONFIG = {
       showSocial: false,
       actionLinks: [
         { text: 'Học D5 Render Cơ Bản', url: 'https://youtube.com/playlist?list=PLAxnVKb5XqwUD_rpWIupGl20BT2cTIKBX&si=gPHvgS0U5zgHcBxk' },
-        { text: 'Ứng Dụng AI Kiến Trúc', url: 'https://youtube.com/playlist?list=PLAxnVKb5XqwVaD79Kf3S6Tuguc2aM2A_M&si=eqrdbWTPWmsPCh8Q' }
+        { text: 'Ứng Dụng AI Kiến Trúc', url: 'https://youtube.com/playlist?list=PLAxnVKb5XqwVdEsJm4-eKY2picTnVQn0E&si=kS-T3AkDR0dfiIp4' }
       ]
     },
 
@@ -89,7 +92,7 @@ const CONFIG = {
       fog:      false,
       title:    'D5 RENDER TIPS',
       subtitle: 'KINH NGHIỆM THỰC CHIẾN CHUYÊN SÂU',
-      code:     'SC-03',
+      code:     'TIPS',
       codeLabel:'ADVANCED TECHNIQUES',
       specs:    [
         'Nội dung: Các thủ thuật xử lý ánh sáng & vật liệu khó',
@@ -99,7 +102,7 @@ const CONFIG = {
       cta:      '',
       showSocial: false,
       actionLinks: [
-        { text: 'Xem Tips D5 Render Chuyên Sâu', url: 'https://youtube.com/playlist?list=PLAxnVKb5XqwVdEsJm4-eKY2picTnVQn0E&si=kS-T3AkDR0dfiIp4' }
+        { text: 'Xem Tips D5 Render Chuyên Sâu', url: 'https://youtube.com/playlist?list=PLAxnVKb5XqwVaD79Kf3S6Tuguc2aM2A_M&si=gefTBXf6fR_BQQ72' }
       ]
     },
 
@@ -113,7 +116,7 @@ const CONFIG = {
       fog:      false,
       title:    'FUTURE VISUAL',
       subtitle: 'ĐỊNH HƯỚNG CÔNG NGHỆ TƯƠNG LAI',
-      code:     'SC-04',
+      code:     'VISION',
       codeLabel:'VISION',
       specs:    [
         'Công nghệ: Real-time Raytracing & Neural Rendering',
@@ -137,7 +140,7 @@ const CONFIG = {
       grain:    true,
       title:    'VƯƠNG ĐẮC HIỆP',
       subtitle: 'HIEPD5 / ARCHITECTURAL VISUALIZER',
-      code:     'SC-05',
+      code:     'ABOUT',
       codeLabel:'ABOUT ME',
       specs:    [
         'Sáng lập: <a href="https://www.facebook.com/groups/9524388777642550" target="_blank" rel="noopener">Group D5render Viet nam | Quy hoach kiến trúc</a>',
@@ -456,22 +459,44 @@ function render() {
   if (dominantScene) {
     updateInfoPanel(dominantScene);
 
-    // Apply 3D Parallax & Depth Translation to info panel children
+    // Apply Stronger 3D Parallax & Staggered Opacity to info panel children
     const progress = dominantScene.currentProgress || 0.5;
     const delta = progress - 0.5; // range: -0.5 to 0.5
 
-    sceneTitle.style.transform   = `translate3d(${(delta * -40).toFixed(1)}px, 0, ${(Math.abs(delta) * -80).toFixed(1)}px) rotateY(${(delta * -10).toFixed(1)}deg)`;
-    sceneSub.style.transform     = `translate3d(${(delta * -60).toFixed(1)}px, 0, ${(Math.abs(delta) * -50).toFixed(1)}px) rotateY(${(delta * -12).toFixed(1)}deg)`;
-    sceneSpecs.style.transform   = `translate3d(${(delta * -80).toFixed(1)}px, 0, ${(Math.abs(delta) * -20).toFixed(1)}px) rotateY(${(delta * -15).toFixed(1)}deg)`;
+    // Staggered Opacity calculations based on distance from center (delta = 0)
+    const opacityLabel = Math.pow(Math.max(0, 1 - Math.abs(delta) * 1.8), 1.5);
+    const opacityTitle = Math.pow(Math.max(0, 1 - Math.abs(delta) * 2.1), 1.5);
+    const opacitySub   = Math.pow(Math.max(0, 1 - Math.abs(delta) * 2.4), 1.5);
+    const opacityDiv   = Math.pow(Math.max(0, 1 - Math.abs(delta) * 2.6), 1.5);
+    const opacitySpecs = Math.pow(Math.max(0, 1 - Math.abs(delta) * 2.8), 1.5);
+    const opacityAct   = Math.pow(Math.max(0, 1 - Math.abs(delta) * 3.0), 1.5);
+
+    const pLabel = document.getElementById('project-label');
+    if (pLabel) {
+      pLabel.style.transform = `translate3d(${(delta * -120).toFixed(1)}px, 0, ${(Math.abs(delta) * -100).toFixed(1)}px) rotateY(${(delta * -14).toFixed(1)}deg)`;
+      pLabel.style.opacity   = opacityLabel.toFixed(3);
+    }
+
+    sceneTitle.style.transform   = `translate3d(${(delta * -180).toFixed(1)}px, 0, ${(Math.abs(delta) * -150).toFixed(1)}px) rotateY(${(delta * -18).toFixed(1)}deg)`;
+    sceneTitle.style.opacity     = opacityTitle.toFixed(3);
+
+    sceneSub.style.transform     = `translate3d(${(delta * -240).toFixed(1)}px, 0, ${(Math.abs(delta) * -120).toFixed(1)}px) rotateY(${(delta * -22).toFixed(1)}deg)`;
+    sceneSub.style.opacity       = opacitySub.toFixed(3);
 
     const divider = document.getElementById('scene-divider');
     if (divider) {
-      divider.style.transform   = `translate3d(${(delta * -50).toFixed(1)}px, 0, ${(Math.abs(delta) * -60).toFixed(1)}px) rotateY(${(delta * -11).toFixed(1)}deg)`;
+      divider.style.transform   = `translate3d(${(delta * -200).toFixed(1)}px, 0, ${(Math.abs(delta) * -130).toFixed(1)}px) rotateY(${(delta * -20).toFixed(1)}deg)`;
+      divider.style.opacity     = opacityDiv.toFixed(3);
     }
+
+    sceneSpecs.style.transform   = `translate3d(${(delta * -300).toFixed(1)}px, 0, ${(Math.abs(delta) * -80).toFixed(1)}px) rotateY(${(delta * -25).toFixed(1)}deg)`;
+    sceneSpecs.style.opacity     = opacitySpecs.toFixed(3);
 
     const actions = document.getElementById('scene-actions');
     if (actions) {
-      actions.style.transform   = `translate3d(${(delta * -95).toFixed(1)}px, 0, 0px) rotateY(${(delta * -18).toFixed(1)}deg)`;
+      actions.style.transform   = `translate3d(${(delta * -360).toFixed(1)}px, 0, ${(Math.abs(delta) * -40).toFixed(1)}px) rotateY(${(delta * -30).toFixed(1)}deg)`;
+      actions.style.opacity     = opacityAct.toFixed(3);
+      actions.style.pointerEvents = opacityAct > 0.15 ? 'all' : 'none';
     }
   }
 
