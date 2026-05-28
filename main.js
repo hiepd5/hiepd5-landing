@@ -196,7 +196,8 @@ const scenesEl    = document.getElementById('scenes');
 const loading     = document.getElementById('loading');
 const progressBar = document.getElementById('progress');
 const scrollHint  = document.getElementById('scroll-hint');
-const cursor      = document.getElementById('cursor');
+const cursorDot   = document.getElementById('cursor-dot');
+const cursorRing  = document.getElementById('cursor-ring');
 const sceneTitle  = document.getElementById('scene-title');
 const sceneSub    = document.getElementById('scene-subtitle');
 const sceneDivider= document.getElementById('scene-divider');
@@ -204,10 +205,86 @@ const sceneSpecs  = document.getElementById('scene-specs');
 const sceneCode   = document.getElementById('scene-code');
 const sceneCta    = document.getElementById('scene-cta');
 const navLinks    = document.getElementById('nav-links');
+const mobileMenuLinks = document.querySelector('.mobile-menu-links');
+const menuToggle   = document.getElementById('menu-toggle');
+const mobileOverlay = document.getElementById('mobile-menu-overlay');
+
+// ── CUSTOM CURSOR & MAGNETIC EFFECT ──────────────────────────────────
+let cursorX = 0, cursorY = 0;
+let ringX = 0, ringY = 0;
+
+window.addEventListener('mousemove', (e) => {
+  cursorX = e.clientX;
+  cursorY = e.clientY;
+  if (cursorDot) {
+    cursorDot.style.left = cursorX + 'px';
+    cursorDot.style.top  = cursorY + 'px';
+  }
+});
+
+function updateCursorRing() {
+  // Smooth tracking using simple interpolation
+  ringX += (cursorX - ringX) * 0.15;
+  ringY += (cursorY - ringY) * 0.15;
+  if (cursorRing) {
+    cursorRing.style.left = ringX + 'px';
+    cursorRing.style.top  = ringY + 'px';
+  }
+  requestAnimationFrame(updateCursorRing);
+}
+updateCursorRing();
+
+function initMagneticCursor() {
+  if (!cursorRing) return;
+  const hoverables = document.querySelectorAll('a, button, .action-btn, .nav-link, .mobile-nav-link');
+  hoverables.forEach(el => {
+    if (el.dataset.cursorBound) return;
+    el.dataset.cursorBound = 'true';
+
+    el.addEventListener('mouseenter', () => {
+      cursorRing.classList.add('cursor-hover');
+    });
+    el.addEventListener('mouseleave', () => {
+      cursorRing.classList.remove('cursor-hover');
+    });
+  });
+}
+
+// ── MOBILE MENU SYSTEM ────────────────────────────────────────────────
+function openMobileMenu() {
+  if (menuToggle) menuToggle.classList.add('open');
+  if (mobileOverlay) mobileOverlay.classList.add('open');
+}
+
+function closeMobileMenu() {
+  if (menuToggle) menuToggle.classList.remove('open');
+  if (mobileOverlay) mobileOverlay.classList.remove('open');
+}
+
+if (menuToggle) {
+  menuToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (menuToggle.classList.contains('open')) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
+  });
+}
+
+if (mobileOverlay) {
+  mobileOverlay.addEventListener('click', (e) => {
+    if (e.target === mobileOverlay) {
+      closeMobileMenu();
+    }
+  });
+}
 
 // ── BUILD NAV ─────────────────────────────────────────────────────────
 CONFIG.scenes.forEach((s, i) => {
   if (s.type !== 'image') return;
+  
+  // Desktop button
   const btn = document.createElement('button');
   btn.className   = 'nav-link';
   btn.textContent = s.code || `0${i+1}`;
@@ -217,7 +294,26 @@ CONFIG.scenes.forEach((s, i) => {
     scheduleRender();
   });
   navLinks.appendChild(btn);
+
+  // Mobile menu link
+  if (mobileMenuLinks) {
+    const mBtn = document.createElement('a');
+    mBtn.className = 'mobile-nav-link';
+    mBtn.href = '#';
+    mBtn.textContent = s.code || `0${i+1}`;
+    mBtn.dataset.idx = i;
+    mBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      targetScroll = s.start + CONFIG.SCENE_WIDTH * 0.3;
+      scheduleRender();
+      closeMobileMenu();
+    });
+    mobileMenuLinks.appendChild(mBtn);
+  }
 });
+
+// Bind cursor interaction to menu buttons
+initMagneticCursor();
 
 // ── BUILD SCENE LAYERS ────────────────────────────────────────────────
 const layers = [];
@@ -374,6 +470,12 @@ function updateInfoPanel(scene) {
   document.querySelectorAll('.nav-link').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.idx == sceneIdx);
   });
+  document.querySelectorAll('.mobile-nav-link').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.idx == sceneIdx);
+  });
+
+  // Re-bind cursor interactions on new elements
+  initMagneticCursor();
 
   // Lazy load adjacent transitions
   preloadTransition(CONFIG.scenes[sceneIdx - 1]);
@@ -516,13 +618,52 @@ window.addEventListener('wheel', (e) => {
 }, { passive: false });
 
 let lastTouchY = null;
-window.addEventListener('touchstart', (e) => { lastTouchY = e.touches[0].clientY; }, { passive: true });
+let lastTouchTime = null;
+let touchVelocity = 0;
+let touchInertiaRaf = null;
+
+window.addEventListener('touchstart', (e) => {
+  lastTouchY = e.touches[0].clientY;
+  lastTouchTime = performance.now();
+  touchVelocity = 0;
+  cancelAnimationFrame(touchInertiaRaf);
+}, { passive: true });
+
 window.addEventListener('touchmove',  (e) => {
   if (lastTouchY === null) return;
-  addScroll((lastTouchY - e.touches[0].clientY) * CONFIG.TOUCH_MULTIPLIER);
+  const now = performance.now();
+  const dt = now - lastTouchTime;
+  const deltaY = lastTouchY - e.touches[0].clientY;
+
+  addScroll(deltaY * CONFIG.TOUCH_MULTIPLIER);
+
+  if (dt > 0) {
+    touchVelocity = (deltaY * CONFIG.TOUCH_MULTIPLIER) / dt;
+  }
+
   lastTouchY = e.touches[0].clientY;
+  lastTouchTime = now;
 }, { passive: true });
-window.addEventListener('touchend', () => { lastTouchY = null; });
+
+window.addEventListener('touchend', () => {
+  lastTouchY = null;
+  
+  if (Math.abs(touchVelocity) > 0.15) {
+    let velocity = touchVelocity * 16.67;
+    const maxSpeed = 60;
+    if (velocity > maxSpeed) velocity = maxSpeed;
+    if (velocity < -maxSpeed) velocity = -maxSpeed;
+
+    function applyInertia() {
+      addScroll(velocity);
+      velocity *= 0.93;
+      if (Math.abs(velocity) > 0.5) {
+        touchInertiaRaf = requestAnimationFrame(applyInertia);
+      }
+    }
+    touchInertiaRaf = requestAnimationFrame(applyInertia);
+  }
+});
 
 window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown' || e.key === 'ArrowRight') addScroll( CONFIG.KEYBOARD_STEP);
@@ -537,11 +678,6 @@ window.addEventListener('resize', () => {
     }
   });
   scheduleRender();
-});
-
-window.addEventListener('mousemove', (e) => {
-  cursor.style.left = e.clientX + 'px';
-  cursor.style.top  = e.clientY + 'px';
 });
 
 // ── LOADING ───────────────────────────────────────────────────────────

@@ -11,12 +11,14 @@
 
   <!-- Loading -->
   <div id="loading">
-    <div class="loading-dot"></div>
-    <span>Loading</span>
+    <div class="loading-brand">HIEPD5.COM</div>
+    <div class="loading-progress-bar"><div class="loading-progress-fill"></div></div>
+    <span>CINEMATIC ARCHITECTURE</span>
   </div>
 
   <!-- Custom cursor -->
-  <div id="cursor"></div>
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
 
   <!-- Scene layers — built by JS -->
   <div id="scenes"></div>
@@ -54,6 +56,12 @@
     </button>
 
     <a id="nav-ai-btn" href="https://aistudio.google.com/u/1/apps/acd43aee-4604-4684-a130-194bea8817fa?showPreview=true&amp;showAssistant=true&amp;fullscreenApplet=true" target="_blank" rel="noopener">AI PROMPT 2.0</a>
+
+    <!-- Hamburger Menu Toggle (Mobile) -->
+    <button id="menu-toggle" aria-label="Menu Toggle">
+      <span class="line line-1"></span>
+      <span class="line line-2"></span>
+    </button>
   </nav>
 
   <!-- Right indicators -->
@@ -71,6 +79,15 @@
       <div class="wheel"><div class="wheel-dot"></div></div>
     </div>
     <div id="scene-cta"></div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div id="mobile-menu-overlay">
+    <div class="mobile-menu-links"></div>
+    <div class="mobile-menu-footer">
+      <a href="tel:0979591156">Zalo: 0979 591 156</a>
+      <span>kts.vuongdachiep@gmail.com</span>
+    </div>
   </div>
 
   <script src="main.js"></script>
