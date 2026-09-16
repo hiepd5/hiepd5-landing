@@ -7,12 +7,12 @@ const ASSET_BASE = 'https://assets.hiepd5.com/hiepd5-assets/';
 
 // ── CONFIG ────────────────────────────────────────────────────────────
 const CONFIG = {
-  lerpFactor:        0.055,
+  lerpFactor:        0.065,   // Slightly faster response
   scrollSensitivity: 1.0,
 
-  SCENE_WIDTH:       1000,  // virtual px — ảnh tĩnh
-  TRANS_WIDTH:       700,   // virtual px — clip AI transition (lớn = scroll điều khiển từng frame)
-  CROSSFADE:         80,    // px overlap
+  SCENE_WIDTH:       1000,   // virtual px — ảnh tĩnh
+  TRANS_WIDTH:       700,    // virtual px — clip AI transition
+  CROSSFADE:         110,    // px overlap — mượt hơn
 
   LERP_SETTLE:       0.08,
   OPACITY_CUTOFF:    0.004,
@@ -20,7 +20,7 @@ const CONFIG = {
   KEYBOARD_STEP:     100,
   TOUCH_MULTIPLIER:  2.8,
   FADE_INNER_RATIO:  0.25,
-  LOADING_HIDE_DELAY:900,
+  LOADING_HIDE_DELAY:1000,
 
   owner: {
     name:     'Vương Đắc Hiệp',
@@ -29,8 +29,6 @@ const CONFIG = {
     facebook: 'https://www.facebook.com/vuongdachiep',
   },
 
-  // Mỗi image scene có: title, subtitle, specs[], code, codeLabel, cta
-  // Điền content thật khi có ảnh dự án
   scenes: [
     {
       type:     'image',
@@ -38,8 +36,8 @@ const CONFIG = {
       zoom:     { from: 1.0, to: 1.12 },
       pan:      { fromX: 2, fromY: -1, toX: -2, toY: 1 },
       fog:      true,
-      title:    'HD5 STUDIO',
-      subtitle: 'DIỄN HỌA KIẾN TRÚC ĐẲNG CẤP',
+      title:    'HD5 Studio',
+      subtitle: 'Diễn Họa Kiến Trúc Đẳng Cấp',
       code:     'STUDIO',
       codeLabel:'HD5STUDIO.COM',
       specs:    [
@@ -64,8 +62,8 @@ const CONFIG = {
       zoom:     { from: 1.0, to: 1.15 },
       pan:      { fromX: -3, fromY: 0, toX: 3, toY: -1 },
       fog:      false,
-      title:    'D5 RENDER WORKFLOW',
-      subtitle: 'ĐÀO TẠO & CHIA SẺ KIẾN THỨC MIỄN PHÍ',
+      title:    'D5 Render Workflow',
+      subtitle: 'Đào Tạo & Chia Sẻ Kiến Thức Miễn Phí',
       code:     'WORKFLOW',
       codeLabel:'LEARNING WORKFLOW',
       specs:    [
@@ -90,8 +88,8 @@ const CONFIG = {
       zoom:     { from: 1.05, to: 1.18 },
       pan:      { fromX: 3, fromY: 1, toX: -3, toY: -1 },
       fog:      false,
-      title:    'D5 RENDER TIPS',
-      subtitle: 'KINH NGHIỆM THỰC CHIẾN CHUYÊN SÂU',
+      title:    'D5 Render Tips',
+      subtitle: 'Kinh Nghiệm Thực Chiến Chuyên Sâu',
       code:     'TIPS',
       codeLabel:'ADVANCED TECHNIQUES',
       specs:    [
@@ -114,10 +112,10 @@ const CONFIG = {
       zoom:     { from: 1.05, to: 1.18 },
       pan:      { fromX: -2, fromY: -1, toX: 2, toY: 1 },
       fog:      false,
-      title:    'FUTURE VISUAL',
-      subtitle: 'ĐỊNH HƯỚNG CÔNG NGHỆ TƯƠNG LAI',
+      title:    'Future Visual',
+      subtitle: 'Định Hướng Công Nghệ Tương Lai',
       code:     'VISION',
-      codeLabel:'VISION',
+      codeLabel:'VISION 2025',
       specs:    [
         'Công nghệ: Real-time Raytracing & Neural Rendering',
         'Xu hướng: Đón đầu kỷ nguyên thiết kế tối ưu bằng AI',
@@ -138,8 +136,8 @@ const CONFIG = {
       fog:      true,
       vignette: true,
       grain:    true,
-      title:    'VƯƠNG ĐẮC HIỆP',
-      subtitle: 'HIEPD5 / ARCHITECTURAL VISUALIZER',
+      title:    'Vương Đắc Hiệp',
+      subtitle: 'HiepD5 / Architectural Visualizer',
       code:     'ABOUT',
       codeLabel:'ABOUT ME',
       specs:    [
@@ -168,6 +166,9 @@ CONFIG.scenes.forEach(s => {
   _pos    = s.end - CONFIG.CROSSFADE;
 });
 const TOTAL_SCROLL = CONFIG.scenes.at(-1).end;
+
+// Count only image scenes for nav/dots
+const imageScenes = CONFIG.scenes.filter(s => s.type === 'image');
 
 // ── MATH ──────────────────────────────────────────────────────────────
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
@@ -198,6 +199,7 @@ const progressBar = document.getElementById('progress');
 const scrollHint  = document.getElementById('scroll-hint');
 const cursorDot   = document.getElementById('cursor-dot');
 const cursorRing  = document.getElementById('cursor-ring');
+const cursorLabel = document.querySelector('.cursor-label');
 const sceneTitle  = document.getElementById('scene-title');
 const sceneSub    = document.getElementById('scene-subtitle');
 const sceneDivider= document.getElementById('scene-divider');
@@ -208,8 +210,16 @@ const navLinks    = document.getElementById('nav-links');
 const mobileMenuLinks = document.querySelector('.mobile-menu-links');
 const menuToggle   = document.getElementById('menu-toggle');
 const mobileOverlay = document.getElementById('mobile-menu-overlay');
+const sceneCurrentEl = document.getElementById('scene-current');
+const sceneTotalEl   = document.getElementById('scene-total');
+const sceneDotsEl    = document.getElementById('scene-dots');
 
-// ── CUSTOM CURSOR & MAGNETIC EFFECT ──────────────────────────────────
+// Set total scene count
+if (sceneTotalEl) {
+  sceneTotalEl.textContent = String(imageScenes.length).padStart(2, '0');
+}
+
+// ── CUSTOM CURSOR ─────────────────────────────────────────────────────
 let cursorX = 0, cursorY = 0;
 let ringX = 0, ringY = 0;
 
@@ -223,9 +233,8 @@ window.addEventListener('mousemove', (e) => {
 });
 
 function updateCursorRing() {
-  // Smooth tracking using simple interpolation
-  ringX += (cursorX - ringX) * 0.15;
-  ringY += (cursorY - ringY) * 0.15;
+  ringX += (cursorX - ringX) * 0.13;
+  ringY += (cursorY - ringY) * 0.13;
   if (cursorRing) {
     cursorRing.style.left = ringX + 'px';
     cursorRing.style.top  = ringY + 'px';
@@ -236,21 +245,30 @@ updateCursorRing();
 
 function initMagneticCursor() {
   if (!cursorRing) return;
-  const hoverables = document.querySelectorAll('a, button, .action-btn, .nav-link, .mobile-nav-link');
+  const hoverables = document.querySelectorAll('a, button, .action-btn, .nav-link, .mobile-nav-link, .scene-dot, #floating-cta');
   hoverables.forEach(el => {
     if (el.dataset.cursorBound) return;
     el.dataset.cursorBound = 'true';
 
     el.addEventListener('mouseenter', () => {
       cursorRing.classList.add('cursor-hover');
+      // Contextual label
+      if (el.tagName === 'A' || el.classList.contains('action-btn')) {
+        if (cursorLabel) cursorLabel.textContent = 'VIEW';
+      } else if (el.classList.contains('scene-dot')) {
+        if (cursorLabel) cursorLabel.textContent = '';
+      } else {
+        if (cursorLabel) cursorLabel.textContent = '';
+      }
     });
     el.addEventListener('mouseleave', () => {
       cursorRing.classList.remove('cursor-hover');
+      if (cursorLabel) cursorLabel.textContent = '';
     });
   });
 }
 
-// ── MOBILE MENU SYSTEM ────────────────────────────────────────────────
+// ── MOBILE MENU ───────────────────────────────────────────────────────
 function openMobileMenu() {
   if (menuToggle) menuToggle.classList.add('open');
   if (mobileOverlay) mobileOverlay.classList.add('open');
@@ -264,30 +282,27 @@ function closeMobileMenu() {
 if (menuToggle) {
   menuToggle.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (menuToggle.classList.contains('open')) {
-      closeMobileMenu();
-    } else {
-      openMobileMenu();
-    }
+    menuToggle.classList.contains('open') ? closeMobileMenu() : openMobileMenu();
   });
 }
 
 if (mobileOverlay) {
   mobileOverlay.addEventListener('click', (e) => {
-    if (e.target === mobileOverlay) {
-      closeMobileMenu();
-    }
+    if (e.target === mobileOverlay) closeMobileMenu();
   });
 }
 
-// ── BUILD NAV ─────────────────────────────────────────────────────────
+// ── BUILD NAV + DOTS ──────────────────────────────────────────────────
+const dotEls = [];
+
 CONFIG.scenes.forEach((s, i) => {
   if (s.type !== 'image') return;
-  
-  // Desktop button
+  const imgIdx = imageScenes.indexOf(s);
+
+  // Desktop nav button
   const btn = document.createElement('button');
   btn.className   = 'nav-link';
-  btn.textContent = s.code || `0${i+1}`;
+  btn.textContent = s.code || `0${imgIdx + 1}`;
   btn.dataset.idx = i;
   btn.addEventListener('click', () => {
     targetScroll = s.start + CONFIG.SCENE_WIDTH * 0.3;
@@ -300,7 +315,7 @@ CONFIG.scenes.forEach((s, i) => {
     const mBtn = document.createElement('a');
     mBtn.className = 'mobile-nav-link';
     mBtn.href = '#';
-    mBtn.textContent = s.code || `0${i+1}`;
+    mBtn.textContent = s.title || s.code;
     mBtn.dataset.idx = i;
     mBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -310,9 +325,22 @@ CONFIG.scenes.forEach((s, i) => {
     });
     mobileMenuLinks.appendChild(mBtn);
   }
+
+  // Scene thumbnail dot
+  if (sceneDotsEl) {
+    const dot = document.createElement('button');
+    dot.className = 'scene-dot';
+    dot.dataset.idx = i;
+    dot.title = s.title || s.code;
+    dot.addEventListener('click', () => {
+      targetScroll = s.start + CONFIG.SCENE_WIDTH * 0.3;
+      scheduleRender();
+    });
+    sceneDotsEl.appendChild(dot);
+    dotEls.push({ dot, sceneIdx: i });
+  }
 });
 
-// Bind cursor interaction to menu buttons
 initMagneticCursor();
 
 // ── BUILD SCENE LAYERS ────────────────────────────────────────────────
@@ -397,7 +425,6 @@ function preloadTransition(scene) {
   }
 }
 
-// Preload only first transition on init
 preloadTransition(CONFIG.scenes[1]);
 
 // ── SOCIAL LINKS ──────────────────────────────────────────────────────
@@ -405,7 +432,7 @@ function buildSocialLinks() {
   const o = CONFIG.owner;
   const div = document.createElement('div');
   div.className = 'social-links';
-  div.style.cssText = 'position:absolute;bottom:60px;left:40px;z-index:10;pointer-events:all';
+  div.style.cssText = 'position:absolute;bottom:68px;left:48px;z-index:10;pointer-events:all';
   div.innerHTML = `
     <a href="${o.youtube}" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.8 15.5V8.5l6.2 3.5-6.2 3.5z"/></svg>
@@ -420,17 +447,34 @@ function buildSocialLinks() {
 
 // ── UI UPDATE — text panel per scene ──────────────────────────────────
 let currentInfoScene = null;
+let currentImageSceneIndex = 0;
 
 function updateInfoPanel(scene) {
   if (!scene || scene.type !== 'image') return;
   if (scene === currentInfoScene) return;
   currentInfoScene = scene;
 
+  // Animate out → update → animate in
+  const panel = document.getElementById('info-panel');
+
+  // Update scene counter
+  const imgIdx = imageScenes.indexOf(scene);
+  if (imgIdx !== -1) {
+    currentImageSceneIndex = imgIdx;
+    if (sceneCurrentEl) {
+      sceneCurrentEl.textContent = String(imgIdx + 1).padStart(2, '0');
+    }
+    // Update dots
+    dotEls.forEach(({ dot, sceneIdx }) => {
+      dot.classList.toggle('active', CONFIG.scenes.indexOf(scene) === sceneIdx);
+    });
+  }
+
   sceneTitle.textContent  = scene.title    || '';
   sceneSub.textContent    = scene.subtitle || '';
-  
+
   if (scene.cta && scene.ctaUrl) {
-    sceneCta.innerHTML = `<a href="${scene.ctaUrl}" target="_blank" rel="noopener" style="color:inherit; text-decoration:none; cursor:none;">${scene.cta}</a>`;
+    sceneCta.innerHTML = `<a href="${scene.ctaUrl}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;cursor:none;">${scene.cta}</a>`;
   } else {
     sceneCta.textContent = scene.cta || '';
   }
@@ -442,7 +486,7 @@ function updateInfoPanel(scene) {
     ? `${scene.code}<span>${scene.codeLabel || ''}</span>`
     : '';
 
-  // Dynamic action buttons (YouTube playlists)
+  // Dynamic action buttons
   const sceneActionsEl = document.getElementById('scene-actions');
   if (sceneActionsEl) {
     sceneActionsEl.innerHTML = '';
@@ -457,7 +501,7 @@ function updateInfoPanel(scene) {
         sceneActionsEl.appendChild(a);
       });
       sceneActionsEl.style.display = 'flex';
-      void sceneActionsEl.offsetWidth; // Force repaint
+      void sceneActionsEl.offsetWidth;
       sceneActionsEl.style.opacity = '1';
     } else {
       sceneActionsEl.style.display = 'none';
@@ -474,13 +518,11 @@ function updateInfoPanel(scene) {
     btn.classList.toggle('active', btn.dataset.idx == sceneIdx);
   });
 
-  // Re-bind cursor interactions on new elements
   initMagneticCursor();
 
   // Lazy load adjacent transitions
   preloadTransition(CONFIG.scenes[sceneIdx - 1]);
   preloadTransition(CONFIG.scenes[sceneIdx + 1]);
-  // wrap: nếu ở scene cuối thì preload transition đầu (loop)
   if (sceneIdx === 0) preloadTransition(CONFIG.scenes[CONFIG.scenes.length - 1]);
 }
 
@@ -492,7 +534,8 @@ function render() {
   const s = ((currentScroll % TOTAL_SCROLL) + TOTAL_SCROLL) % TOTAL_SCROLL;
   progressBar.style.width  = (s / TOTAL_SCROLL * 100) + '%';
   scrollHint.style.opacity = currentScroll < CONFIG.SCROLL_HINT_HIDE ? '1' : '0';
-  let dominantScene = null;
+
+  let dominantScene    = null;
   let dominantProgress = -1;
 
   layers.forEach(({ scene, el, imgEl, canvasEl, ctx }) => {
@@ -550,54 +593,62 @@ function render() {
     const ty    = lerp(scene.pan.fromY, scene.pan.toY, rawT);
     imgEl.style.transform = `scale(${scale.toFixed(4)}) translate(${tx.toFixed(2)}%, ${ty.toFixed(2)}%)`;
 
-    // Track most-visible image scene for info panel
     if (opacity > dominantProgress) {
       dominantProgress = opacity;
       dominantScene    = scene;
-      dominantScene.currentProgress = progress; // Track scene active progress
+      dominantScene.currentProgress = progress;
     }
   });
 
   if (dominantScene) {
     updateInfoPanel(dominantScene);
 
-    // Apply Stronger 3D Parallax & Staggered Opacity to info panel children
+    // ── Refined 3D Parallax — subtle rotateY, added blur ──
     const progress = dominantScene.currentProgress || 0.5;
-    const delta = progress - 0.5; // range: -0.5 to 0.5
+    const delta    = progress - 0.5; // range: -0.5 to +0.5
+    const absDelta = Math.abs(delta);
 
-    // Staggered Opacity calculations based on distance from center (delta = 0)
-    const opacityLabel = Math.pow(Math.max(0, 1 - Math.abs(delta) * 1.8), 1.5);
-    const opacityTitle = Math.pow(Math.max(0, 1 - Math.abs(delta) * 2.1), 1.5);
-    const opacitySub   = Math.pow(Math.max(0, 1 - Math.abs(delta) * 2.4), 1.5);
-    const opacityDiv   = Math.pow(Math.max(0, 1 - Math.abs(delta) * 2.6), 1.5);
-    const opacitySpecs = Math.pow(Math.max(0, 1 - Math.abs(delta) * 2.8), 1.5);
-    const opacityAct   = Math.pow(Math.max(0, 1 - Math.abs(delta) * 3.0), 1.5);
+    // Opacity curves — staggered entry/exit
+    const opacityLabel = Math.pow(Math.max(0, 1 - absDelta * 1.6), 1.4);
+    const opacityTitle = Math.pow(Math.max(0, 1 - absDelta * 1.9), 1.4);
+    const opacitySub   = Math.pow(Math.max(0, 1 - absDelta * 2.2), 1.4);
+    const opacityDiv   = Math.pow(Math.max(0, 1 - absDelta * 2.4), 1.4);
+    const opacitySpecs = Math.pow(Math.max(0, 1 - absDelta * 2.6), 1.4);
+    const opacityAct   = Math.pow(Math.max(0, 1 - absDelta * 2.8), 1.4);
+
+    // Blur: max 3px at edges
+    const blurVal = (absDelta * 6).toFixed(2);
 
     const pLabel = document.getElementById('project-label');
     if (pLabel) {
-      pLabel.style.transform = `translate3d(${(delta * -120).toFixed(1)}px, 0, ${(Math.abs(delta) * -100).toFixed(1)}px) rotateY(${(delta * -14).toFixed(1)}deg)`;
+      pLabel.style.transform = `translate3d(${(delta * -80).toFixed(1)}px, 0, ${(absDelta * -60).toFixed(1)}px) rotateY(${(delta * -5).toFixed(1)}deg)`;
       pLabel.style.opacity   = opacityLabel.toFixed(3);
+      pLabel.style.filter    = `blur(${Math.min(blurVal * 0.5, 2)}px)`;
     }
 
-    sceneTitle.style.transform   = `translate3d(${(delta * -180).toFixed(1)}px, 0, ${(Math.abs(delta) * -150).toFixed(1)}px) rotateY(${(delta * -18).toFixed(1)}deg)`;
+    sceneTitle.style.transform   = `translate3d(${(delta * -120).toFixed(1)}px, 0, ${(absDelta * -90).toFixed(1)}px) rotateY(${(delta * -6).toFixed(1)}deg)`;
     sceneTitle.style.opacity     = opacityTitle.toFixed(3);
+    sceneTitle.style.filter      = `blur(${Math.min(blurVal * 0.4, 2.5)}px)`;
 
-    sceneSub.style.transform     = `translate3d(${(delta * -240).toFixed(1)}px, 0, ${(Math.abs(delta) * -120).toFixed(1)}px) rotateY(${(delta * -22).toFixed(1)}deg)`;
+    sceneSub.style.transform     = `translate3d(${(delta * -160).toFixed(1)}px, 0, ${(absDelta * -70).toFixed(1)}px) rotateY(${(delta * -5.5).toFixed(1)}deg)`;
     sceneSub.style.opacity       = opacitySub.toFixed(3);
+    sceneSub.style.filter        = `blur(${Math.min(blurVal * 0.4, 2)}px)`;
 
     const divider = document.getElementById('scene-divider');
     if (divider) {
-      divider.style.transform   = `translate3d(${(delta * -200).toFixed(1)}px, 0, ${(Math.abs(delta) * -130).toFixed(1)}px) rotateY(${(delta * -20).toFixed(1)}deg)`;
+      divider.style.transform   = `translate3d(${(delta * -140).toFixed(1)}px, 0, ${(absDelta * -75).toFixed(1)}px) rotateY(${(delta * -5).toFixed(1)}deg)`;
       divider.style.opacity     = opacityDiv.toFixed(3);
     }
 
-    sceneSpecs.style.transform   = `translate3d(${(delta * -300).toFixed(1)}px, 0, ${(Math.abs(delta) * -80).toFixed(1)}px) rotateY(${(delta * -25).toFixed(1)}deg)`;
+    sceneSpecs.style.transform   = `translate3d(${(delta * -200).toFixed(1)}px, 0, ${(absDelta * -50).toFixed(1)}px) rotateY(${(delta * -4.5).toFixed(1)}deg)`;
     sceneSpecs.style.opacity     = opacitySpecs.toFixed(3);
+    sceneSpecs.style.filter      = `blur(${Math.min(blurVal * 0.3, 1.5)}px)`;
 
     const actions = document.getElementById('scene-actions');
     if (actions) {
-      actions.style.transform   = `translate3d(${(delta * -360).toFixed(1)}px, 0, ${(Math.abs(delta) * -40).toFixed(1)}px) rotateY(${(delta * -30).toFixed(1)}deg)`;
+      actions.style.transform   = `translate3d(${(delta * -240).toFixed(1)}px, 0, ${(absDelta * -25).toFixed(1)}px) rotateY(${(delta * -4).toFixed(1)}deg)`;
       actions.style.opacity     = opacityAct.toFixed(3);
+      actions.style.filter      = `blur(${Math.min(blurVal * 0.25, 1.5)}px)`;
       actions.style.pointerEvents = opacityAct > 0.15 ? 'all' : 'none';
     }
   }
@@ -617,41 +668,38 @@ window.addEventListener('wheel', (e) => {
   addScroll(e.deltaY * CONFIG.scrollSensitivity);
 }, { passive: false });
 
-let lastTouchY = null;
+let lastTouchY    = null;
 let lastTouchTime = null;
 let touchVelocity = 0;
 let touchInertiaRaf = null;
 
 window.addEventListener('touchstart', (e) => {
-  lastTouchY = e.touches[0].clientY;
+  lastTouchY    = e.touches[0].clientY;
   lastTouchTime = performance.now();
   touchVelocity = 0;
   cancelAnimationFrame(touchInertiaRaf);
 }, { passive: true });
 
-window.addEventListener('touchmove',  (e) => {
+window.addEventListener('touchmove', (e) => {
   if (lastTouchY === null) return;
-  const now = performance.now();
-  const dt = now - lastTouchTime;
+  const now    = performance.now();
+  const dt     = now - lastTouchTime;
   const deltaY = lastTouchY - e.touches[0].clientY;
 
   addScroll(deltaY * CONFIG.TOUCH_MULTIPLIER);
 
-  if (dt > 0) {
-    touchVelocity = (deltaY * CONFIG.TOUCH_MULTIPLIER) / dt;
-  }
+  if (dt > 0) touchVelocity = (deltaY * CONFIG.TOUCH_MULTIPLIER) / dt;
 
-  lastTouchY = e.touches[0].clientY;
+  lastTouchY    = e.touches[0].clientY;
   lastTouchTime = now;
 }, { passive: true });
 
 window.addEventListener('touchend', () => {
   lastTouchY = null;
-  
   if (Math.abs(touchVelocity) > 0.15) {
     let velocity = touchVelocity * 16.67;
     const maxSpeed = 60;
-    if (velocity > maxSpeed) velocity = maxSpeed;
+    if (velocity >  maxSpeed) velocity =  maxSpeed;
     if (velocity < -maxSpeed) velocity = -maxSpeed;
 
     function applyInertia() {
@@ -692,12 +740,12 @@ function hideLoading() {
 const probe = new Image();
 probe.onload = probe.onerror = hideLoading;
 probe.src = CONFIG.scenes[0].src;
-setTimeout(hideLoading, 3000);
+setTimeout(hideLoading, 3500);
 
 // ── AMBIENT AUDIO ENGINE ──────────────────────────────────────────────
-const bgAudio      = document.getElementById('bg-audio');
-const audioToggle  = document.getElementById('audio-toggle');
-let audioStarted = false;
+const bgAudio     = document.getElementById('bg-audio');
+const audioToggle = document.getElementById('audio-toggle');
+let audioStarted  = false;
 
 function startAudio() {
   if (audioStarted) return;
@@ -706,26 +754,24 @@ function startAudio() {
   bgAudio.play().then(() => {
     audioToggle.classList.remove('audio-muted');
   }).catch(err => {
-    console.log("Autoplay prevented, waiting for user interaction.", err);
-    audioStarted = false; // Allow retry
+    console.log('Autoplay prevented, waiting for user interaction.', err);
+    audioStarted = false;
   });
 
-  // Clean up listeners
-  window.removeEventListener('click', startAudio);
-  window.removeEventListener('scroll', startAudio);
-  window.removeEventListener('wheel', startAudio);
+  window.removeEventListener('click',      startAudio);
+  window.removeEventListener('scroll',     startAudio);
+  window.removeEventListener('wheel',      startAudio);
   window.removeEventListener('touchstart', startAudio);
 }
 
-// User interaction events to trigger audio
-window.addEventListener('click', startAudio, { passive: true });
-window.addEventListener('scroll', startAudio, { passive: true });
-window.addEventListener('wheel', startAudio, { passive: true });
+window.addEventListener('click',      startAudio, { passive: true });
+window.addEventListener('scroll',     startAudio, { passive: true });
+window.addEventListener('wheel',      startAudio, { passive: true });
 window.addEventListener('touchstart', startAudio, { passive: true });
 
 function fadeAudio(volume, duration = 800) {
   const startVol = bgAudio.volume;
-  const steps = 20;
+  const steps    = 20;
   const interval = duration / steps;
   let step = 0;
 
@@ -740,7 +786,7 @@ function fadeAudio(volume, duration = 800) {
 }
 
 if (audioToggle && bgAudio) {
-  bgAudio.volume = 0.5; // Init volume at 50%
+  bgAudio.volume = 0.5;
 
   audioToggle.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -758,10 +804,9 @@ if (audioToggle && bgAudio) {
   });
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────
-// Start at scene-05 (index 8)
-const _initScene = CONFIG.scenes[8];
-targetScroll  = _initScene.start + CONFIG.CROSSFADE;
-currentScroll = _initScene.start + CONFIG.CROSSFADE;
+// ── INIT — Start at Scene 01 ──────────────────────────────────────────
+const _initScene  = CONFIG.scenes[0];  // Scene 01 (HD5 Studio)
+targetScroll  = _initScene.start;
+currentScroll = _initScene.start;
 updateInfoPanel(CONFIG.scenes[0]);
 scheduleRender();

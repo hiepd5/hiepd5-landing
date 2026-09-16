@@ -3,22 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="Vương Đắc Hiệp — HiepD5.com">
+  <meta name="description" content="Vương Đắc Hiệp — Kiến trúc sư & Chuyên gia Diễn họa Kiến trúc. HD5Studio, D5 Render Workflow, AI Architecture.">
+  <meta name="theme-color" content="#080808">
   <title>HiepD5.com — Vương Đắc Hiệp</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="HiepD5.com — Vương Đắc Hiệp">
+  <meta property="og:description" content="Kiến trúc sư & Chuyên gia Diễn họa Kiến trúc | HD5Studio | D5 Render | AI Architecture">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hiepd5.com">
+  <meta property="og:image" content="https://assets.hiepd5.com/hiepd5-assets/images/scene-01.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HiepD5.com — Vương Đắc Hiệp">
+  <meta name="twitter:image" content="https://assets.hiepd5.com/hiepd5-assets/images/scene-01.jpg">
+
+  <!-- Preload hero image -->
+  <link rel="preload" as="image" href="https://assets.hiepd5.com/hiepd5-assets/images/scene-01.jpg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Grotesk:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Vương Đắc Hiệp",
+    "url": "https://hiepd5.com",
+    "jobTitle": "Architectural Visualizer",
+    "telephone": "+84979591156",
+    "email": "kts.vuongdachiep@gmail.com",
+    "sameAs": [
+      "https://www.youtube.com/channel/UCXD97eRzqP_7T9-wLg75MyQ",
+      "https://www.facebook.com/vuongdachiep",
+      "https://hd5studio.com"
+    ]
+  }
+  </script>
 </head>
 <body>
 
   <!-- Loading -->
   <div id="loading">
-    <div class="loading-brand">HIEPD5.COM</div>
+    <div class="loading-logo">
+      <div class="loading-brand-mark">H<span class="accent">5</span></div>
+      <div class="loading-brand-name">HIEPD5.COM</div>
+    </div>
     <div class="loading-progress-bar"><div class="loading-progress-fill"></div></div>
-    <span>CINEMATIC ARCHITECTURE</span>
+    <span class="loading-tagline">CINEMATIC ARCHITECTURE</span>
   </div>
 
   <!-- Custom cursor -->
   <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
+  <div id="cursor-ring"><span class="cursor-label"></span></div>
 
   <!-- Scene layers — built by JS -->
   <div id="scenes"></div>
@@ -28,9 +70,9 @@
     <div id="project-label">PROJECT BY / VƯƠNG ĐẮC HIỆP</div>
     <h1 id="scene-title"></h1>
     <div id="scene-subtitle"></div>
-    <div id="scene-divider"></div>
+    <div id="scene-divider"><span></span></div>
     <ul id="scene-specs"></ul>
-    <!-- Dynamic action buttons (like Youtube playlists) -->
+    <!-- Dynamic action buttons -->
     <div id="scene-actions"></div>
   </div>
 
@@ -41,35 +83,47 @@
 
   <!-- Top navigation -->
   <nav id="top-nav">
-    <div id="nav-owner">HiepD5.com</div>
-    <div id="nav-links"></div>
-    <div id="nav-contact">
-      <a href="tel:0979591156">0979 591 156</a>
+    <div id="nav-brand">
+      <span class="brand-mark">H<span class="accent">5</span></span>
+      <span class="brand-name">HIEPD5.COM</span>
     </div>
-    
-    <!-- Soundwave Audio Toggle -->
-    <button id="audio-toggle" class="audio-muted" title="Bật/Tắt Nhạc Nền">
-      <span class="bar bar-1"></span>
-      <span class="bar bar-2"></span>
-      <span class="bar bar-3"></span>
-      <span class="bar bar-4"></span>
-    </button>
+    <div id="nav-links"></div>
+    <div id="nav-right">
+      <div id="nav-contact">
+        <a href="tel:0979591156">0979 591 156</a>
+      </div>
 
-    <a id="nav-ai-btn" href="https://aistudio.google.com/u/1/apps/acd43aee-4604-4684-a130-194bea8817fa?showPreview=true&amp;showAssistant=true&amp;fullscreenApplet=true" target="_blank" rel="noopener">AI PROMPT 2.0</a>
+      <!-- Soundwave Audio Toggle -->
+      <button id="audio-toggle" class="audio-muted" title="Bật/Tắt Nhạc Nền">
+        <span class="bar bar-1"></span>
+        <span class="bar bar-2"></span>
+        <span class="bar bar-3"></span>
+        <span class="bar bar-4"></span>
+      </button>
 
-    <a id="nav-masoi-btn" href="https://masoi.hiepd5.com" target="_blank" rel="noopener">🐺 MA SÓI</a>
+      <a id="nav-ai-btn" href="https://aistudio.google.com/u/1/apps/acd43aee-4604-4684-a130-194bea8817fa?showPreview=true&amp;showAssistant=true&amp;fullscreenApplet=true" target="_blank" rel="noopener">AI PROMPT 2.0</a>
+      <a id="nav-masoi-btn" href="https://masoi.hiepd5.com" target="_blank" rel="noopener">🐺 MA SÓI</a>
 
-    <!-- Hamburger Menu Toggle (Mobile) -->
-    <button id="menu-toggle" aria-label="Menu Toggle">
-      <span class="line line-1"></span>
-      <span class="line line-2"></span>
-    </button>
+      <!-- Hamburger Menu Toggle (Mobile) -->
+      <button id="menu-toggle" aria-label="Menu Toggle">
+        <span class="line line-1"></span>
+        <span class="line line-2"></span>
+      </button>
+    </div>
   </nav>
 
   <!-- Right indicators -->
   <div id="right-panel">
     <div id="scene-code"></div>
-    <div id="crosshair">+</div>
+    <div id="crosshair">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <line x1="9" y1="0" x2="9" y2="6" stroke="currentColor" stroke-width="0.8"/>
+        <line x1="9" y1="12" x2="9" y2="18" stroke="currentColor" stroke-width="0.8"/>
+        <line x1="0" y1="9" x2="6" y2="9" stroke="currentColor" stroke-width="0.8"/>
+        <line x1="12" y1="9" x2="18" y2="9" stroke="currentColor" stroke-width="0.8"/>
+        <circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="0.8"/>
+      </svg>
+    </div>
     <div id="coordinates">21.028°N / 105.834°E</div>
   </div>
 
@@ -80,15 +134,30 @@
       <span>Scroll</span>
       <div class="wheel"><div class="wheel-dot"></div></div>
     </div>
+    <div id="scene-counter"><span id="scene-current">01</span><span class="sep">/</span><span id="scene-total">05</span></div>
     <div id="scene-cta"></div>
+    <!-- Scene thumbnail dots -->
+    <div id="scene-dots"></div>
   </div>
+
+  <!-- Floating Contact CTA -->
+  <a id="floating-cta" href="tel:0979591156">
+    <span class="cta-icon">✦</span>
+    <span class="cta-text">LIÊN HỆ</span>
+  </a>
 
   <!-- Mobile Menu Overlay -->
   <div id="mobile-menu-overlay">
-    <div class="mobile-menu-links"></div>
-    <div class="mobile-menu-footer">
-      <a href="tel:0979591156">Zalo: 0979 591 156</a>
-      <span>kts.vuongdachiep@gmail.com</span>
+    <div class="mobile-menu-inner">
+      <div class="mobile-menu-links"></div>
+      <div class="mobile-menu-footer">
+        <a href="tel:0979591156">Zalo: 0979 591 156</a>
+        <a href="mailto:kts.vuongdachiep@gmail.com">kts.vuongdachiep@gmail.com</a>
+        <div class="mobile-menu-ctas">
+          <a href="https://aistudio.google.com/u/1/apps/acd43aee-4604-4684-a130-194bea8817fa?showPreview=true&showAssistant=true&fullscreenApplet=true" target="_blank" rel="noopener">AI Prompt 2.0</a>
+          <a href="https://masoi.hiepd5.com" target="_blank" rel="noopener">🐺 Ma Sói</a>
+        </div>
+      </div>
     </div>
   </div>
 
