@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.*
+*.db
+logs/
+__pycache__/
+*.pyc
+*.pyd
+raw_drop/*.glb
